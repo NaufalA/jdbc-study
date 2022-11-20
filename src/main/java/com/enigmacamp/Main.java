@@ -3,12 +3,13 @@ package com.enigmacamp;
 import com.enigmacamp.model.Product;
 import com.enigmacamp.model.ProductPrice;
 import com.enigmacamp.repository.ProductRepository;
+import com.enigmacamp.service.ProductService;
 import com.enigmacamp.shared.utils.DBManager;
 
 import java.sql.SQLException;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws Exception {
         try {
             DBManager.createConnection();
         } catch (SQLException e) {
@@ -16,27 +17,30 @@ public class Main {
         }
 
         ProductRepository productRepository = new ProductRepository(DBManager.getConnection(), "products");
+        ProductService productService = new ProductService(productRepository);
 
         try {
             Product kecap = new Product("Kecap", new ProductPrice(5000f));
             Product beras = new Product("Beras", new ProductPrice(10000f));
-            kecap = productRepository.insert(kecap);
-            beras = productRepository.insert(beras);
+            kecap = productService.create(kecap);
+            beras = productService.create(beras);
 
-            productRepository.findAll().forEach(System.out::println);
+            productService.getAll().forEach(System.out::println);
 
-            System.out.println(productRepository.findById(kecap.id));
+            System.out.println(productService.getById(kecap.id));
 
-            productRepository.update(beras.id, new Product("beras2", new ProductPrice(12000f)));
+            productService.update(beras.id, new Product("beras2", new ProductPrice(12000f)));
 
-            System.out.println(productRepository.findById(beras.id));
+            System.out.println(productService.getById(beras.id));
 
-            productRepository.delete(kecap.id);
+            productService.remove(kecap.id);
 
-            productRepository.findAll().forEach(System.out::println);
+            productService.getAll().forEach(System.out::println);
         } catch (Exception e) {
             DBManager.getConnection().rollback();
             throw e;
         }
+
+        DBManager.closeConnection();
     }
 }
