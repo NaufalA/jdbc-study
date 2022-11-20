@@ -5,6 +5,7 @@ import com.enigmacamp.model.TransactionDetail;
 import com.enigmacamp.repository.ProductRepository;
 import com.enigmacamp.repository.TransactionRepository;
 import com.enigmacamp.service.ProductService;
+import com.enigmacamp.service.TransactionService;
 import com.enigmacamp.shared.utils.DBManager;
 
 import java.sql.SQLException;
@@ -24,6 +25,8 @@ public class Test {
 
         TransactionRepository transactionRepository =
                 new TransactionRepository(DBManager.getConnection(), "transactions");
+        TransactionService transactionService =
+                new TransactionService(transactionRepository);
 
 //        try {
 //            Product kecap = new Product("Kecap", new ProductPrice(5000f));
@@ -59,18 +62,17 @@ public class Test {
             millis = System.currentTimeMillis();
             Transaction trx2 = new Transaction(new Date(millis), trxDetails);
             System.out.println("insert");
-            trx1 = transactionRepository.insert(trx1);
-            trx2 = transactionRepository.insert(trx2);
+            trx1 = transactionService.create(trx1);
+            trx2 = transactionService.create(trx2);
 
-            System.out.println("findall");
-            transactionRepository.findAll().forEach(System.out::println);
+            System.out.println("find all");
+            transactionService.getAll().forEach(System.out::println);
             System.out.println("find by id");
-            System.out.println(transactionRepository.findById(trx1.id));
+            System.out.println(transactionService.getById(trx1.id));
             System.out.println("delete" +
-                    transactionRepository.delete(trx2.id)
+                    transactionService.remove(trx2.id)
             );
-            transactionRepository.findAll().forEach(System.out::println);
-
+            transactionService.getAll().forEach(System.out::println);
         } catch (Exception e) {
             DBManager.getConnection().rollback();
             throw e;

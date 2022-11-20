@@ -77,7 +77,8 @@ public class TransactionRepository implements ITransactionRepository<Transaction
                         "INNER JOIN transaction_details r1 ON t.id = r1.transaction_id " +
                         "INNER JOIN product_prices r2 ON r1.product_price_id = r2.id " +
                         "INNER JOIN products r3 ON r2.product_id = r3.id " +
-                        "WHERE t.is_deleted=false",
+                        "WHERE t.is_deleted=false " +
+                        "ORDER BY t.id, detail_id",
                 tableName
         );
         List<Transaction> list = new ArrayList<>();
@@ -98,6 +99,7 @@ public class TransactionRepository implements ITransactionRepository<Transaction
                 item.transactionDetails.add(parseDetail(rs, true));
             }
         }
+        list.add(item);
 
         rs.close();
         st.close();
