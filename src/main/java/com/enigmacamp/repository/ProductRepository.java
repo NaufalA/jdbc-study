@@ -125,7 +125,7 @@ public class ProductRepository implements IRepository<Product> {
             );
 
             st = conn.prepareStatement(productQuery);
-            st.setString(1, updatedItem.productName == null ? existingItem.productName : updatedItem.productName);
+            st.setString(1, updatedItem.productName.equals("") ? existingItem.productName : updatedItem.productName);
 
             rs = st.executeQuery();
 
@@ -133,12 +133,13 @@ public class ProductRepository implements IRepository<Product> {
             while (rs.next()) {
                 savedItem = parse(rs);
             }
-
-            ProductPrice lastActivePrice = getPrice(existingItem.id);
-            if (!Objects.equals(updatedItem.productPrice.price, lastActivePrice.price)) {
+            if (
+                    updatedItem.productPrice.price != -1 &&
+                    !Objects.equals(updatedItem.productPrice.price, existingItem.productPrice.price)
+            ) {
                 String updateLastPriceQuery = String.format(
                         "UPDATE product_prices SET is_active=false WHERE id=%s",
-                        lastActivePrice.id
+                        existingItem.productPrice.id
                 );
 
                 st = conn.prepareStatement(updateLastPriceQuery);

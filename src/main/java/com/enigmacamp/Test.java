@@ -1,16 +1,16 @@
 package com.enigmacamp;
 
+import com.enigmacamp.model.Product;
+import com.enigmacamp.model.ProductPrice;
 import com.enigmacamp.presenter.ProductPresenter;
 import com.enigmacamp.repository.ProductRepository;
 import com.enigmacamp.service.ProductService;
 import com.enigmacamp.shared.utils.DBManager;
-import com.enigmacamp.shared.utils.InputHelper;
-import com.enigmacamp.shared.utils.StringHelper;
 
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Main {
+public class Test {
     public static void main(String[] args) throws Exception {
         try {
             DBManager.createConnection();
@@ -23,26 +23,26 @@ public class Main {
         ProductService productService = new ProductService(productRepository);
         ProductPresenter productPresenter = new ProductPresenter(productService, scanner, "Product");
 
-        int menuInput = -1;
-        while (menuInput != 0) {
-            StringHelper.printHeader("Enigma Mart");
-            System.out.println("1. Product");
-            System.out.println("2. Transaction");
-            System.out.println("3. Report");
-            System.out.println("0. Exit");
-            StringHelper.printInputPrompt("Select Feature Menu");
-            menuInput = InputHelper.inputInt(scanner);
-            switch (menuInput) {
-                case 1:
-                    productPresenter.mainMenu();
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 0:
-                    break;
-            }
+        try {
+            Product kecap = new Product("Kecap", new ProductPrice(5000f));
+            Product beras = new Product("Beras", new ProductPrice(10000f));
+            kecap = productService.create(kecap);
+            beras = productService.create(beras);
+
+            productService.getAll().forEach(System.out::println);
+
+            System.out.println(productService.getById(kecap.id));
+
+            productService.update(beras.id, new Product("beras2", new ProductPrice(12000f)));
+
+            System.out.println(productService.getById(beras.id));
+
+            productService.remove(kecap.id);
+
+            productService.getAll().forEach(System.out::println);
+        } catch (Exception e) {
+            DBManager.getConnection().rollback();
+            throw e;
         }
 
         DBManager.closeConnection();
