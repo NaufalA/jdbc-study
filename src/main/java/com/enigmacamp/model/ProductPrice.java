@@ -5,6 +5,8 @@ import com.enigmacamp.shared.classes.BaseModel;
 public class ProductPrice extends BaseModel {
     public Float price;
 
+    public Product product;
+
     public ProductPrice(Float price) {
         this.price = price;
     }

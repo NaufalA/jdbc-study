@@ -2,14 +2,14 @@ package com.enigmacamp.repository;
 
 import com.enigmacamp.model.Product;
 import com.enigmacamp.model.ProductPrice;
-import com.enigmacamp.shared.interfaces.IRepository;
+import com.enigmacamp.repository.interfaces.IProductRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ProductRepository implements IRepository<Product> {
+public class ProductRepository implements IProductRepository<Product> {
     Connection conn;
     String tableName;
 

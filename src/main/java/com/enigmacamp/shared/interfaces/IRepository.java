@@ -11,8 +11,6 @@ public interface IRepository<T> {
 
     T findById(Integer id) throws SQLException;
 
-    T update(Integer id, T updatedItem) throws SQLException;
-
     Integer delete(Integer id) throws SQLException;
 
     T parse(ResultSet rs) throws SQLException;
