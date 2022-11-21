@@ -2,8 +2,8 @@ package com.enigmacamp.presenter;
 
 import com.enigmacamp.model.Product;
 import com.enigmacamp.model.ProductPrice;
+import com.enigmacamp.presenter.interfaces.IProductPresenter;
 import com.enigmacamp.service.ProductService;
-import com.enigmacamp.shared.classes.BasePresenter;
 import com.enigmacamp.shared.utils.InputHelper;
 import com.enigmacamp.shared.utils.StringHelper;
 
@@ -11,11 +11,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-public class ProductPresenter extends BasePresenter {
-    ProductService service;
-    Scanner scanner;
-
-    String title;
+public class ProductPresenter implements IProductPresenter {
+    private final ProductService service;
+    private final Scanner scanner;
+    private final String title;
 
     public ProductPresenter(ProductService service, Scanner scanner, String title) {
         this.service = service;
@@ -85,7 +84,7 @@ public class ProductPresenter extends BasePresenter {
                 System.out.printf("%d\t| %s\n", (i + 1), products.get(i));
             }
             StringHelper.printInputPrompt("Select product index");
-            int selectedIndex = Integer.parseInt(scanner.nextLine());
+            int selectedIndex = InputHelper.inputInt(scanner);
             nextAction.accept(products.get(selectedIndex - 1).id);
         } catch (Exception e) {
             System.out.println("Error While Setting " + title + "s");

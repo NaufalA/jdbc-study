@@ -15,4 +15,9 @@ public class ProductPrice extends BaseModel {
         super(id);
         this.price = price;
     }
+
+    public ProductPrice(Float price, Product product) {
+        this.price = price;
+        this.product = product;
+    }
 }

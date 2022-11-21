@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ProductRepository implements IProductRepository<Product> {
-    Connection conn;
-    String tableName;
+    private final Connection conn;
+    private final String tableName;
 
     public ProductRepository(Connection conn, String tableName) {
         this.conn = conn;

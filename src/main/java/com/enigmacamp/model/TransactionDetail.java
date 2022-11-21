@@ -7,6 +7,7 @@ public class TransactionDetail extends BaseModel {
     public Integer productPriceId;
     public ProductPrice productPrice;
 
+    public TransactionDetail() {}
     public TransactionDetail(Float quantity) {
         this.quantity = quantity;
     }
@@ -31,5 +32,12 @@ public class TransactionDetail extends BaseModel {
         super(id);
         this.quantity = quantity;
         this.productPriceId = productPriceId;
+    }
+
+    public TransactionDetail(Integer id, Float quantity, Integer productPriceId, ProductPrice productPrice) {
+        super(id);
+        this.quantity = quantity;
+        this.productPriceId = productPriceId;
+        this.productPrice = productPrice;
     }
 }

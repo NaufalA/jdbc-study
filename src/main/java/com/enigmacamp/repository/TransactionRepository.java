@@ -1,5 +1,7 @@
 package com.enigmacamp.repository;
 
+import com.enigmacamp.model.Product;
+import com.enigmacamp.model.ProductPrice;
 import com.enigmacamp.model.Transaction;
 import com.enigmacamp.model.TransactionDetail;
 import com.enigmacamp.repository.interfaces.ITransactionRepository;
@@ -10,8 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class TransactionRepository implements ITransactionRepository<Transaction> {
-    Connection conn;
-    String tableName;
+    private final Connection conn;
+    private final String tableName;
 
     public TransactionRepository(Connection conn, String tableName) {
         this.conn = conn;
@@ -71,12 +73,9 @@ public class TransactionRepository implements ITransactionRepository<Transaction
         String query = String.format(
                 "SELECT " +
                         "t.id, t.transaction_date, " +
-                        "r1.id AS detail_id, r1.quantity, r1.product_price_id, " +
-                        "r2.price, r3.product_name " +
+                        "r1.id AS detail_id, r1.quantity, r1.product_price_id " +
                         "FROM %s t " +
                         "INNER JOIN transaction_details r1 ON t.id = r1.transaction_id " +
-                        "INNER JOIN product_prices r2 ON r1.product_price_id = r2.id " +
-                        "INNER JOIN products r3 ON r2.product_id = r3.id " +
                         "WHERE t.is_deleted=false " +
                         "ORDER BY t.id, detail_id",
                 tableName
@@ -90,13 +89,13 @@ public class TransactionRepository implements ITransactionRepository<Transaction
             Integer itemId = rs.getInt("id");
             if (item == null) {
                 item = parse(rs);
-                item.transactionDetails.add(parseDetail(rs, true));
+                item.transactionDetails.add(parseDetail(rs, false));
             } else if (Objects.equals(item.id, itemId)) {
-                item.transactionDetails.add(parseDetail(rs, true));
+                item.transactionDetails.add(parseDetail(rs, false));
             } else {
                 list.add(item);
                 item = parse(rs);
-                item.transactionDetails.add(parseDetail(rs, true));
+                item.transactionDetails.add(parseDetail(rs, false));
             }
         }
         list.add(item);
@@ -179,7 +178,11 @@ public class TransactionRepository implements ITransactionRepository<Transaction
             return new TransactionDetail(
                     rs.getInt("detail_id"),
                     rs.getFloat("quantity"),
-                    rs.getInt("product_price_id")
+                    rs.getInt("product_price_id"),
+                    new ProductPrice(
+                            rs.getFloat("price"),
+                            new Product(rs.getString("product_name"))
+                    )
             );
         }
         return new TransactionDetail(

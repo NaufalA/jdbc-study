@@ -8,6 +8,10 @@ public class StringHelper {
     }
 
     public static void printInputPrompt(String prompt) {
-        System.out.print(prompt+"\n> ");
+        if (!prompt.equals("")) {
+            System.out.print(prompt + "\n> ");
+        } else {
+            System.out.print("> ");
+        }
     }
 }

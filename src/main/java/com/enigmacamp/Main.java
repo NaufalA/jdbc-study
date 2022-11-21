@@ -1,8 +1,11 @@
 package com.enigmacamp;
 
 import com.enigmacamp.presenter.ProductPresenter;
+import com.enigmacamp.presenter.TransactionPresenter;
 import com.enigmacamp.repository.ProductRepository;
+import com.enigmacamp.repository.TransactionRepository;
 import com.enigmacamp.service.ProductService;
+import com.enigmacamp.service.TransactionService;
 import com.enigmacamp.shared.utils.DBManager;
 import com.enigmacamp.shared.utils.InputHelper;
 import com.enigmacamp.shared.utils.StringHelper;
@@ -23,6 +26,10 @@ public class Main {
         ProductService productService = new ProductService(productRepository);
         ProductPresenter productPresenter = new ProductPresenter(productService, scanner, "Product");
 
+        TransactionRepository transactionRepository = new TransactionRepository(DBManager.getConnection(), "transactions");
+        TransactionService transactionService = new TransactionService(transactionRepository);
+        TransactionPresenter transactionPresenter = new TransactionPresenter(transactionService, productService, scanner, "Transaction");
+
         int menuInput = -1;
         while (menuInput != 0) {
             StringHelper.printHeader("Enigma Mart");
@@ -37,6 +44,7 @@ public class Main {
                     productPresenter.mainMenu();
                     break;
                 case 2:
+                    transactionPresenter.mainMenu();
                     break;
                 case 3:
                     break;

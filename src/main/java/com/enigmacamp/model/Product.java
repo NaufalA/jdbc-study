@@ -9,6 +9,10 @@ public class Product extends BaseModel {
     public Product() {
     }
 
+    public Product(String productName) {
+        this.productName = productName;
+    }
+
     public Product(Integer id, String productName) {
         super(id);
         this.productName = productName;
